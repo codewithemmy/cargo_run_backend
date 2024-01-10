@@ -45,10 +45,14 @@ const OrderSchema = new mongoose.Schema(
       enum: ["express", "normal"],
       default: "normal",
     },
-    orderRating: {
-      rate: Number,
-      comment: String,
-    },
+    ratings: [
+      {
+        rate: Number,
+        review: String,
+        ratedBy: { type: mongoose.Types.ObjectId, ref: "User" },
+      },
+    ],
+    averageRating: { type: Number, default: 0 },
     isDelete: {
       type: Boolean,
       default: false,

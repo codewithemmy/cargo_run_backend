@@ -79,6 +79,26 @@ class OrderService {
       msg: orderMessage.UPDATE,
     }
   }
+
+  static async ratingOrderService(payload, params) {
+    const findOrder = await OrderRepository.findSingleOrderByParams({
+      _id: new mongoose.Types.ObjectId(params),
+    })
+
+    if (!findOrder) return { success: false, msg: orderMessage.ORDER_NOT_FOUND }
+
+    const order = await OrderRepository.updateOrderDetails(
+      { _id: new mongoose.Types.ObjectId(params) },
+      { $push: { ratings: { ...payload } } }
+    )
+
+    if (!order) return { success: false, msg: orderMessage.UPDATE_ERROR }
+
+    return {
+      success: true,
+      msg: orderMessage.UPDATE,
+    }
+  }
 }
 
 module.exports = { OrderService }

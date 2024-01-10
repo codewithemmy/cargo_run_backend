@@ -18,7 +18,7 @@ const { sendMailNotification } = require("../../utils/email")
 class UserService {
   static async createUserService(payload) {
     const { body } = payload
-    const { password, email, phone, fullName } = body
+    const { email, phone, fullName } = body
 
     const userExist = await UserRepository.validateUser({
       email,
@@ -28,12 +28,16 @@ class UserService {
 
     const otp = AlphaNumeric(6)
 
-    //hash password
+    const password = await hashPassword(body.password)
+
+    console.log("password", password)
+
     const user = await UserRepository.create({
-      ...body,
       phone,
       verificationOtp: otp,
-      password: await hashPassword(password),
+      password,
+      email,
+      fullName,
     })
 
     if (!user._id) return { success: false, msg: UserFailure.CREATE }
