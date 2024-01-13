@@ -6,7 +6,6 @@ const { TransactionService } = require("../services/transaction.service")
 // const crypto = require("crypto")
 
 const paymentTransactionController = async (req, res, next) => {
-  console.log("working")
   const isUser = res.locals.jwt.isAdmin
   switch (isUser) {
     case true:
@@ -21,7 +20,6 @@ const paymentTransactionController = async (req, res, next) => {
   const [error, data] = await manageAsyncOps(
     TransactionService.initiatePaymentTransaction(req.body)
   )
-  console.log("error", error)
 
   if (error) return next(error)
 
