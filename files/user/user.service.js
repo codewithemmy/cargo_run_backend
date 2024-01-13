@@ -85,6 +85,7 @@ class UserService {
       fullName: userProfile.fullName,
       email: userProfile.email,
       phone: userProfile.phone,
+      userType: "User"
     })
 
     const user = {

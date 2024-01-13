@@ -2,46 +2,41 @@ const mongoose = require("mongoose")
 
 const TransactionSchema = new mongoose.Schema(
   {
+    userType: {
+      type: String,
+      // required: true,
+      enum: ["User", "Rider"],
+    },
     userId: {
       type: mongoose.Types.ObjectId,
-      ref: "User",
+      refPath: "userType",
     },
-    name: {
-      type: String,
+    orderId: {
+      type: mongoose.Types.ObjectId,
+      ref: "Order",
+      // required: true,
     },
-    email: {
-      type: String,
-    },
-    cost: {
+    amount: {
       type: Number,
       required: true,
     },
     channel: {
       type: String,
       required: true,
-      enum: ["stripe", "other"],
+      enum: ["paystack", "bank"],
     },
-    sessionId: {
+    reference: {
       type: String,
-    },
-    priceId: {
-      type: String,
-    },
-    transactionUuid: {
-      type: String,
+      required: true,
     },
     status: {
       type: String,
-      // enum: ["pending", "paid", "failed", "open", "unpaid", "canceled"],
+      enum: ["pending", "confirmed", "failed"],
       default: "pending",
     },
-    subscriptionId: {
-      type: mongoose.Types.ObjectId,
-      ref: "SubscriptionPlan",
-    },
-    paymentFor: {
-      type: String,
-    },
+    bankName: { type: String },
+    accountNumber: { type: String },
+    paymentFor: { type: String, default: "logistics" },
     metaData: String,
   },
   { timestamps: true }

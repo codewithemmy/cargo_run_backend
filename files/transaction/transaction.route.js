@@ -1,23 +1,13 @@
 const transactionRoute = require("express").Router()
-const { checkSchema } = require("express-validator")
-const { validate } = require("../../validations/validate")
-const {
-  checkOutValidation,
-} = require("../../validations/transaction/checkOutValidation")
 
+const { isAuthenticated } = require("../../utils")
 const {
-  getTransactionController,
-  checkoutTransactionController,
-  retrieveTransactionController,
+  paymentTransactionController,
 } = require("./controller/transaction.controller")
 
-transactionRoute.get("/", getTransactionController)
-transactionRoute.post(
-  "/checkout",
-  validate(checkSchema(checkOutValidation)),
-  checkoutTransactionController
-)
-transactionRoute.get("/verify", retrieveTransactionController)
+transactionRoute.use(isAuthenticated)
+
+transactionRoute.post("/initiate", paymentTransactionController)
 
 //routes
 module.exports = transactionRoute

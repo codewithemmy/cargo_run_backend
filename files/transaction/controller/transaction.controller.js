@@ -5,33 +5,23 @@ const { CustomError } = require("../../../utils/errors")
 const { TransactionService } = require("../services/transaction.service")
 // const crypto = require("crypto")
 
-const getTransactionController = async (req, res, next) => {
+const paymentTransactionController = async (req, res, next) => {
+  console.log("working")
+  const isUser = res.locals.jwt.isAdmin
+  switch (isUser) {
+    case true:
+      req.body.userType = "Admin"
+      break
+
+    default:
+      req.body.userType = "User"
+      break
+  }
+
   const [error, data] = await manageAsyncOps(
-    TransactionService.getTransactionService(req.query)
+    TransactionService.initiatePaymentTransaction(req.body)
   )
-  if (error) return next(error)
-
-  if (!data.success) return next(new CustomError(data.msg, BAD_REQUEST, data))
-
-  return responseHandler(res, SUCCESS, data)
-}
-
-const checkoutTransactionController = async (req, res, next) => {
-  const [error, data] = await manageAsyncOps(
-    TransactionService.initiateCheckoutSession(req.body)
-  )
-
-  if (error) return next(error)
-
-  if (!data.success) return next(new CustomError(data.msg, BAD_REQUEST, data))
-
-  return responseHandler(res, SUCCESS, data)
-}
-
-const retrieveTransactionController = async (req, res, next) => {
-  const [error, data] = await manageAsyncOps(
-    TransactionService.retrieveCheckOutSession(req.query)
-  )
+  console.log("error", error)
 
   if (error) return next(error)
 
@@ -41,7 +31,5 @@ const retrieveTransactionController = async (req, res, next) => {
 }
 
 module.exports = {
-  getTransactionController,
-  checkoutTransactionController,
-  retrieveTransactionController,
+  paymentTransactionController,
 }
