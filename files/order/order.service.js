@@ -40,7 +40,7 @@ class OrderService {
 
     if (error) return { success: false, msg: error }
 
-    const order = await OrderRepository.fetchNotificationsByParams({
+    const order = await OrderRepository.fetchOrderByParams({
       ...params,
       limit,
       skip,
@@ -69,12 +69,12 @@ class OrderService {
     if (!findOrder) return { success: false, msg: orderMessage.ORDER_NOT_FOUND }
 
     const order = await OrderRepository.updateOrderDetails(
-      { _id: new mongoose.Types.ObjectId(params) },
+      { _id: new mongoose.Types.ObjectId(params), paymentStatus: "paid" },
       { ...payload }
     )
 
     if (!order) return { success: false, msg: orderMessage.UPDATE_ERROR }
-
+    console.log("right here")
     return {
       success: true,
       msg: orderMessage.UPDATE,
@@ -118,8 +118,8 @@ class OrderService {
       }),
     ])
 
-    if (!order) return { success: false, msg: `invalid order` }
-    if (location) return { success: false, msg: `destination reached` }
+    if (!order) return { success: true, msg: `order not found`, data: [] }
+    if (location) return { success: true, msg: `destination reached` }
 
     const socketDetails = await SocketRepository.findSingleSocket({
       userId: new mongoose.Types.ObjectId(riderId),
