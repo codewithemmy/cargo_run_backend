@@ -1,26 +1,11 @@
 const { default: mongoose } = require("mongoose")
 const { SocketRepository } = require("./sockets.repository")
 const fs = require("fs")
+const { OrderRepository } = require("../../order/order.repository")
 
-let onlineUsers = []
 module.exports.socketConnection = async (io) => {
   io.on("connection", async (socket) => {
     console.log(`⚡⚡: ${socket.id} user just connected!`)
-
-    socket.on("typing", (data) => {
-      if (data.typing == true) io.emit("display", data)
-      else io.emit("display", data)
-    })
-
-    socket.on("onlineUsers", (userId) => {
-      !onlineUsers.some((user) => user.userId === userId) &&
-        onlineUsers.push({
-          userId,
-          socketId: socket.id,
-        })
-      console.log("onlineUsers", onlineUsers)
-      io.emit("onlineUsers", onlineUsers)
-    })
 
     socket.on("join", async (obj) => {
       try {
@@ -41,6 +26,9 @@ module.exports.socketConnection = async (io) => {
           socket.emit("join", `Error: ${data.message}`)
         } else {
           socket.emit("join", "Connection Successful")
+          const orders = await OrderRepository.findOrderBySocket()
+          // Emit the order details to the client
+          socket.emit("get-orders", orders)
         }
       } catch (error) {
         console.log("socket error", error)
@@ -53,14 +41,6 @@ module.exports.socketConnection = async (io) => {
       console.log("user disconnected", onlineUsers)
       // send all online users to all users
       io.emit("get-users", onlineUsers)
-    })
-
-    socket.on("offline", () => {
-      // remove user from active users
-      onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id)
-      console.log("user is offline", onlineUsers)
-      // send all online users to all users
-      io.emit("onlineUsers", onlineUsers)
     })
 
     socket.on("error", (error) => {

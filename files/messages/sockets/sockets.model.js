@@ -9,7 +9,7 @@ const socketSchema = new mongoose.Schema(
     modelType: {
       type: String,
       required: true,
-      enum: ["User", "Admin"],
+      enum: ["User", "Rider"],
     },
     userId: {
       type: mongoose.Types.ObjectId,

@@ -14,14 +14,18 @@ const OrderSchema = new mongoose.Schema(
       ref: "Rider",
     },
     addressDetails: {
-      houseNumber: Number,
-      landMark: String,
-      contactNumber: String,
+      houseNumber: { type: Number },
+      landMark: { type: String },
+      contactNumber: { type: String },
+      lng: { type: Number },
+      lat: { type: Number },
     },
     receiverDetails: {
-      name: String,
-      phone: String,
-      address: String,
+      name: { type: String },
+      phone: { type: String },
+      address: { type: String },
+      lng: { type: Number },
+      lat: { type: Number },
     },
     status: {
       type: String,
@@ -33,6 +37,11 @@ const OrderSchema = new mongoose.Schema(
         "accepted",
         "rejected",
       ],
+      default: "pending",
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["paid", "pending"],
       default: "pending",
     },
     deliveryService: {
@@ -53,6 +62,9 @@ const OrderSchema = new mongoose.Schema(
       },
     ],
     averageRating: { type: Number, default: 0 },
+    deliveryFee: { type: Number, default: 50000 },
+    lat: { type: Number },
+    lng: { type: Number },
     isDelete: {
       type: Boolean,
       default: false,

@@ -8,6 +8,9 @@ class OrderRepository {
   static async findSingleOrderByParams(payload) {
     return await Order.findOne({ ...payload })
   }
+  static async findOrderBySocket(payload) {
+    return await Order.find({ ...payload }).sort({ createdAt: -1 })
+  }
 
   static async findSingleOrderExist(payload) {
     return await Order.exists({ ...payload })

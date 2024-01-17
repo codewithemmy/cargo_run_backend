@@ -6,6 +6,7 @@ const {
   generateOtp,
 } = require("../../utils/index")
 const { orderMessage } = require("./order.messages")
+const { SocketRepository } = require("../messages/sockets/sockets.repository")
 
 class OrderService {
   static async createOrderService(payload, params) {
@@ -27,7 +28,7 @@ class OrderService {
 
     if (!order) return { success: false, msg: orderMessage.ORDER_ERROR }
 
-    return { success: true, msg: orderMessage.ORDER_CREATED }
+    return { success: true, msg: orderMessage.ORDER_CREATED, data: order }
   }
 
   static async fetchOrder(query) {
@@ -98,6 +99,36 @@ class OrderService {
       success: true,
       msg: orderMessage.UPDATE,
     }
+  }
+
+  static async getOrderRoute({ body, io }) {
+    const { riderId, orderId, lat, lng } = body
+
+    const [order, location] = await Promise.all([
+      await OrderRepository.findSingleOrderByParams({
+        _id: new mongoose.Types.ObjectId(orderId),
+        riderId,
+        paymentStatus: "paid",
+      }),
+      await OrderRepository.findSingleOrderByParams({
+        "receiverDetails.lat": lat,
+        "receiverDetails.lng": lng,
+        riderId,
+        paymentStatus: "paid",
+      }),
+    ])
+
+    if (!order) return { success: false, msg: `invalid order` }
+    if (location) return { success: false, msg: `destination reached` }
+
+    const socketDetails = await SocketRepository.findSingleSocket({
+      userId: new mongoose.Types.ObjectId(riderId),
+    })
+
+    if (socketDetails)
+      io.to(socketDetails.socketId).emit("private-message", order)
+
+    return { success: true, msg: `order location fetched` }
   }
 }
 
