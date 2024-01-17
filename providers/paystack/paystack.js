@@ -40,7 +40,7 @@ class PaystackPaymentService {
       responseStatus = "failed"
     }
 
-    const { updatedExisting } =
+    const updatedExisting =
       await TransactionRepository.updateTransactionDetails(
         { reference: payload.reference },
         { status: responseStatus, metaData: JSON.stringify(payload) }
@@ -80,6 +80,32 @@ class PaystackPaymentService {
       msg: providerMessages.INITIATE_PAYMENT_SUCCESS,
       data: response,
     }
+  }
+
+  async verifyCardPayment(payload) {
+    //check success of transaction
+    const { data } = payload
+    const transaction = await TransactionRepository.fetchOne(
+      {
+        reference: data.reference,
+      },
+      true
+    )
+
+    if (!transaction?._id)
+      return { success: false, msg: TransactionMessages.TRANSACTION_NOT_FOUND }
+
+    if (transaction?.status != "pending")
+      return { success: false, msg: TransactionMessages.DUPLICATE_TRANSACTION }
+
+    const verifyAndUpdateTransactionRecord = await this.verifySuccessOfPayment(
+      data
+    )
+
+    if (!verifyAndUpdateTransactionRecord.success)
+      return { success: false, msg: verifyAndUpdateTransactionRecord.msg }
+
+    return { success: true, msg: TransactionMessages.PAYMENT_SUCCESS }
   }
 }
 
