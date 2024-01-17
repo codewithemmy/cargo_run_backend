@@ -14,7 +14,6 @@ const TransactionSchema = new mongoose.Schema(
     orderId: {
       type: mongoose.Types.ObjectId,
       ref: "Order",
-      // required: true,
     },
     amount: {
       type: Number,

@@ -10,6 +10,7 @@ const {
 
 const RequestHandler = require("../../utils/axios.provision")
 const { providerMessages } = require("../providers.messages")
+const { OrderRepository } = require("../../files/order/order.repository")
 
 class PaystackPaymentService {
   paymentRequestHandler = RequestHandler.setup({
@@ -36,20 +37,47 @@ class PaystackPaymentService {
     let responseStatus = "pending"
     if (statusVerification.success) {
       responseStatus = "confirmed"
+
+      const updatedExisting =
+        await TransactionRepository.updateTransactionDetails(
+          { reference: payload.reference },
+          { status: responseStatus, metaData: JSON.stringify(payload) }
+        )
+
+      if (!updatedExisting)
+        return {
+          success: false,
+          msg: TransactionMessages.PAYMENT_FAILURE,
+        }
+      await OrderRepository.updateOrderDetails(
+        {
+          _id: new mongoose.Types.ObjectId(updatedExisting.orderId),
+          paymentStatus: "pending",
+        },
+        { paymentStatus: "paid" }
+      )
+      return {
+        success: statusVerification.success,
+        msg: statusVerification.msg,
+      }
     } else {
       responseStatus = "failed"
-    }
-
-    const updatedExisting =
       await TransactionRepository.updateTransactionDetails(
         { reference: payload.reference },
         { status: responseStatus, metaData: JSON.stringify(payload) }
       )
 
-    if (!updatedExisting)
-      return { success: false, msg: TransactionMessages.PAYMENT_FAILURE }
+      if (!updatedExisting)
+        return {
+          success: false,
+          msg: TransactionMessages.PAYMENT_FAILURE,
+        }
 
-    return { success: statusVerification.success, msg: statusVerification.msg }
+      return {
+        success: statusVerification.success,
+        msg: statusVerification.msg,
+      }
+    }
   }
 
   async initiatePayment(paymentPayload) {
@@ -85,12 +113,9 @@ class PaystackPaymentService {
   async verifyCardPayment(payload) {
     //check success of transaction
     const { data } = payload
-    const transaction = await TransactionRepository.fetchOne(
-      {
-        reference: data.reference,
-      },
-      true
-    )
+    const transaction = await TransactionRepository.fetchOne({
+      reference: data.reference,
+    })
 
     if (!transaction?._id)
       return { success: false, msg: TransactionMessages.TRANSACTION_NOT_FOUND }

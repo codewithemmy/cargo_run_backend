@@ -44,7 +44,7 @@ const OrderSchema = new mongoose.Schema(
       enum: ["paid", "pending"],
       default: "pending",
     },
-    deliveryService: {
+    deliveryService: { 
       type: String,
       enum: ["standard", "bulk", "neutral"],
       default: "neutral",
