@@ -23,7 +23,7 @@ class UserService {
       phone,
     })
 
-    if (userExist) return { success: false, msg: UserFailure.EXIST }
+    if (userExist) return { success: false, msg: UserFailure.PHONE }
 
     const password = await hashPassword(body.password)
 
