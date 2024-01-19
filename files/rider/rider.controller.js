@@ -31,7 +31,7 @@ const riderLoginController = async (req, res, next) => {
 const vehicleDetailsController = async (req, res, next) => {
   const value = await fileModifier(req)
   const [error, data] = await manageAsyncOps(
-    RiderService.vehicleDetailsService(res.locals.jwt._id, value)
+    RiderService.vehicleDetailsService(value)
   )
 
   if (error) return next(error)

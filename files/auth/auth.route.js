@@ -1,3 +1,4 @@
+const { isAuthenticated } = require("../../utils")
 const {
   verifyUserController,
   forgotPasswordController,
@@ -6,6 +7,8 @@ const {
 } = require("./controller/auth.controller")
 
 const authRoute = require("express").Router()
+
+authRoute.use(isAuthenticated)
 
 //routes
 authRoute.post("/verify", verifyUserController)

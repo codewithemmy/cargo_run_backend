@@ -86,10 +86,11 @@ class RiderService {
     }
   }
 
-  static async vehicleDetailsService(id, payload) {
+  static async vehicleDetailsService(payload) {
     const { body, image } = payload
+    const { id } = body
 
-    const riderprofile = await RiderRepository.updateRiderDetails(
+    const riderProfile = await RiderRepository.updateRiderDetails(
       { _id: new mongoose.Types.ObjectId(id) },
       {
         "vehicle.image": image,
@@ -97,11 +98,11 @@ class RiderService {
       }
     )
 
-    if (!riderprofile) return { success: false, msg: riderFailure.UPDATE }
+    if (!riderProfile) return { success: false, msg: RiderFailure.UPDATE }
 
     return {
       success: true,
-      msg: riderSuccess.UPDATE,
+      msg: RiderSuccess.UPDATE,
     }
   }
 
