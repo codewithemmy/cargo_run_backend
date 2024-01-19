@@ -16,30 +16,33 @@ const { AuthFailure, AuthSuccess } = require("../auth/auth.messages")
 
 class RiderService {
   static async createRiderService(payload) {
-    const { body, image } = payload
-    const { password, email, phone } = body
+    const { body } = payload
+    const { password, phone } = body
 
     const riderExist = await RiderRepository.validateRider({
-      email,
+      phone,
     })
 
     if (riderExist) return { success: false, msg: RiderFailure.EXIST }
 
-    const { otp } = generateOtp()
+    // const { otp } = generateOtp()
 
     const rider = await RiderRepository.create({
       ...body,
-      "vehicle.image": image,
-      phone,
-      verificationOtp: otp,
       password: await hashPassword(password),
     })
 
     if (!rider._id) return { success: false, msg: RiderFailure.CREATE }
 
+    token = await tokenHandler({
+      _id: rider._id,
+    })
+
     return {
       success: true,
       msg: RiderSuccess.CREATE,
+
+      token,
     }
   }
 
@@ -179,9 +182,9 @@ class RiderService {
   }
 
   static async resendOtpService(payload) {
-    const { email } = payload
+    const { email, id } = payload
     const rider = await RiderRepository.findSingleRiderWithParams({
-      email: email,
+      _id: new mongoose.Types.ObjectId(id),
     })
 
     if (!rider) return { success: false, msg: AuthFailure.FETCH }
@@ -189,10 +192,12 @@ class RiderService {
     const otp = AlphaNumeric(6)
 
     rider.verificationOtp = otp
+    rider.email = email
 
     await rider.save()
 
     const substitutional_parameters = {
+      name: rider.fullName,
       otp: otp,
     }
 

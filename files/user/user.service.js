@@ -26,7 +26,7 @@ class UserService {
 
     if (userExist) return { success: false, msg: UserFailure.EXIST }
 
-    const otp = AlphaNumeric(6)
+    // const otp = AlphaNumeric(6, "number")
 
     const password = await hashPassword(body.password)
 
