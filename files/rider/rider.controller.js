@@ -31,7 +31,7 @@ const riderLoginController = async (req, res, next) => {
 const vehicleDetailsController = async (req, res, next) => {
   const value = await fileModifier(req)
   const [error, data] = await manageAsyncOps(
-    RiderService.vehicleDetailsService(value)
+    RiderService.vehicleDetailsService(res.locals.jwt._id, value)
   )
 
   if (error) return next(error)
@@ -42,9 +42,8 @@ const vehicleDetailsController = async (req, res, next) => {
 }
 
 const updateRiderController = async (req, res, next) => {
-  const value = await fileModifier(req)
   const [error, data] = await manageAsyncOps(
-    RiderService.updateRiderService(res.locals.jwt._id, value)
+    RiderService.updateRiderService(res.locals.jwt._id, req.body)
   )
 
   if (error) return next(error)

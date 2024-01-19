@@ -24,9 +24,7 @@ riderRoute.route("/").post(createRiderController)
 
 riderRoute.use(isAuthenticated)
 
-riderRoute
-  .route("/")
-  .patch(uploadManager("riderImage").single("image"), updateRiderController)
+riderRoute.route("/").patch(updateRiderController)
 
 riderRoute
   .route("/vehicle")

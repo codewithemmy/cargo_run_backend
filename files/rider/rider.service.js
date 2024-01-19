@@ -86,9 +86,8 @@ class RiderService {
     }
   }
 
-  static async vehicleDetailsService(payload) {
+  static async vehicleDetailsService(id, payload) {
     const { body, image } = payload
-    const { id } = body
 
     const riderProfile = await RiderRepository.updateRiderDetails(
       { _id: new mongoose.Types.ObjectId(id) },
@@ -106,13 +105,10 @@ class RiderService {
     }
   }
 
-  static async updateRiderService(id, payload) {
-    const { body, image } = payload
-
+  static async updateRiderService(id, body) {
     const rider = await RiderRepository.updateRiderDetails(
       { _id: new mongoose.Types.ObjectId(id) },
       {
-        profileImage: image,
         ...body,
       }
     )
