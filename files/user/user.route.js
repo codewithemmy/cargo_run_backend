@@ -14,9 +14,7 @@ const {
 const { loginValidation } = require("../../validations/users/loginValidation")
 
 //routes
-userRoute
-  .route("/")
-  .post(uploadManager("userImage").single("image"), createUserController)
+userRoute.route("/").post(createUserController)
 
 userRoute
   .route("/login")
@@ -24,8 +22,6 @@ userRoute
 
 userRoute.use(isAuthenticated)
 
-userRoute
-  .route("/")
-  .patch(uploadManager("userImage").single("image"), userUpdateController)
+userRoute.route("/").patch(userUpdateController)
 
 module.exports = userRoute

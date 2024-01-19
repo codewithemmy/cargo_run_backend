@@ -16,8 +16,7 @@ const { LIMIT, SKIP, SORT } = require("../../constants")
 const { sendMailNotification } = require("../../utils/email")
 
 class UserService {
-  static async createUserService(payload) {
-    const { body } = payload
+  static async createUserService(body) {
     const { phone, fullName } = body
 
     const userExist = await UserRepository.validateUser({
@@ -25,8 +24,6 @@ class UserService {
     })
 
     if (userExist) return { success: false, msg: UserFailure.EXIST }
-
-    // const otp = AlphaNumeric(6, "number")
 
     const password = await hashPassword(body.password)
 
@@ -97,13 +94,10 @@ class UserService {
     }
   }
 
-  static async updateProfileService(id, payload) {
-    const { body, image } = payload
-
+  static async updateProfileService(id, body) {
     delete body.email
 
     const userprofile = await UserRepository.updateUserById(id, {
-      profileImage: image,
       ...body,
     })
 

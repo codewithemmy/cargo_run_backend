@@ -5,9 +5,8 @@ const { CustomError } = require("../../utils/errors")
 const { UserService } = require("./user.service")
 
 const createUserController = async (req, res, next) => {
-  const value = await fileModifier(req)
   const [error, data] = await manageAsyncOps(
-    UserService.createUserService(value)
+    UserService.createUserService(req.body)
   )
 
   if (error) return next(error)
@@ -30,9 +29,8 @@ const userLoginController = async (req, res, next) => {
 }
 
 const userUpdateController = async (req, res, next) => {
-  const value = await fileModifier(req)
   const [error, data] = await manageAsyncOps(
-    UserService.updateProfileService(res.locals.jwt._id, value)
+    UserService.updateProfileService(res.locals.jwt._id, req.body)
   )
 
   if (error) return next(error)
