@@ -5,9 +5,8 @@ const { CustomError } = require("../../utils/errors")
 const { RiderService } = require("./rider.service")
 
 const createRiderController = async (req, res, next) => {
-  const value = await fileModifier(req)
   const [error, data] = await manageAsyncOps(
-    RiderService.createRiderService(value)
+    RiderService.createRiderService(req.body)
   )
 
   if (error) return next(error)

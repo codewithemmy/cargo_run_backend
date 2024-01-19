@@ -15,8 +15,7 @@ const { sendMailNotification } = require("../../utils/email")
 const { AuthFailure, AuthSuccess } = require("../auth/auth.messages")
 
 class RiderService {
-  static async createRiderService(payload) {
-    const { body } = payload
+  static async createRiderService(body) {
     const { password, phone } = body
 
     const riderExist = await RiderRepository.validateRider({
@@ -25,8 +24,6 @@ class RiderService {
 
     if (riderExist) return { success: false, msg: RiderFailure.EXIST }
 
-    // const { otp } = generateOtp()
-
     const rider = await RiderRepository.create({
       ...body,
       password: await hashPassword(password),
@@ -34,14 +31,13 @@ class RiderService {
 
     if (!rider._id) return { success: false, msg: RiderFailure.CREATE }
 
-    token = await tokenHandler({
+    let token = await tokenHandler({
       _id: rider._id,
     })
 
     return {
       success: true,
       msg: RiderSuccess.CREATE,
-
       token,
     }
   }

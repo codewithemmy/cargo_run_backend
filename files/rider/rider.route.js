@@ -20,9 +20,7 @@ riderRoute.route("/forgot-password").post(forgotPasswordController)
 riderRoute.route("/reset-password").post(resetPasswordController)
 
 //routes
-riderRoute
-  .route("/")
-  .post(uploadManager("riderImage").single("image"), createRiderController)
+riderRoute.route("/").post(createRiderController)
 
 riderRoute.use(isAuthenticated)
 
