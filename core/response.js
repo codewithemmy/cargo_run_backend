@@ -6,10 +6,12 @@ module.exports.handleApplicationErrors = (err, req, res, _next) => {
   if (err instanceof CustomError) {
     const { errors = {}, message, statusCode } = err
     const payload =
-      Object.keys(errors)?.length > 0 ? { message, errors } : { message }
+      Object.keys(errors)?.length > 0
+        ? { msg: message, success: "false", errors }
+        : { success: "false", message }
     return res.status(statusCode).json(payload)
   } else if (err instanceof DuplicateError) {
-    const { errors = {}, message, statusCode } = err
+    const { errors = {}, msg: message, statusCode } = err
     const payload =
       Object.keys(errors)?.length > 0 ? { message, errors } : { message }
     return res.status(statusCode).json(payload)
@@ -17,7 +19,7 @@ module.exports.handleApplicationErrors = (err, req, res, _next) => {
 
   res
     .status(400)
-    .json({ message: generalMessages.UNEXPECTED_FAILURE, error: err.message })
+    .json({ msg: generalMessages.UNEXPECTED_FAILURE, error: err.message })
 }
 
 module.exports.notFound = (req, res) => {

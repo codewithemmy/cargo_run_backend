@@ -79,24 +79,26 @@ class AuthService {
   }
 
   static async resendOtpService(payload) {
-    const { email } = payload
-    const user = await UserRepository.findSingleUserWithParams({ email: email })
+    const { email, id } = payload
+    const user = await UserRepository.findSingleUserWithParams({
+      _id: new mongoose.Types.ObjectId(id),
+    })
 
     if (!user) return { success: false, msg: AuthFailure.FETCH }
 
     const otp = AlphaNumeric(6)
 
     user.verificationOtp = otp
-
+    user.email = email
     await user.save()
 
     const substitutional_parameters = {
+      name: user.fullName,
       otp: otp,
     }
-
     await sendMailNotification(
       email,
-      "OTP Verification",
+      "Cargo Run Registration",
       substitutional_parameters,
       "VERIFICATION"
     )

@@ -18,10 +18,10 @@ const { sendMailNotification } = require("../../utils/email")
 class UserService {
   static async createUserService(payload) {
     const { body } = payload
-    const { email, phone, fullName } = body
+    const { phone, fullName } = body
 
     const userExist = await UserRepository.validateUser({
-      email,
+      phone,
     })
 
     if (userExist) return { success: false, msg: UserFailure.EXIST }
@@ -30,32 +30,25 @@ class UserService {
 
     const password = await hashPassword(body.password)
 
-    console.log("password", password)
-
     const user = await UserRepository.create({
       phone,
-      verificationOtp: otp,
       password,
-      email,
       fullName,
     })
 
     if (!user._id) return { success: false, msg: UserFailure.CREATE }
+    let token
 
-    const substitutional_parameters = {
-      name: fullName,
-      otp: otp,
-    }
-    await sendMailNotification(
-      email,
-      "Cargo Run Registration",
-      substitutional_parameters,
-      "VERIFICATION"
-    )
+    user.password = undefined
+
+    token = await tokenHandler({
+      _id: user._id,
+    })
 
     return {
       success: true,
       msg: UserSuccess.CREATE,
+      token,
     }
   }
 
@@ -85,7 +78,7 @@ class UserService {
       fullName: userProfile.fullName,
       email: userProfile.email,
       phone: userProfile.phone,
-      userType: "User"
+      userType: "User",
     })
 
     const user = {
