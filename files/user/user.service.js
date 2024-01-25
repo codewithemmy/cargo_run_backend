@@ -125,7 +125,7 @@ class UserService {
     const socketDetails = await SocketRepository.findSingleSocket({
       userId: new mongoose.Types.ObjectId(locals),
     })
-    console.log({ lng, lat })
+
     if (socketDetails)
       io.to(socketDetails.socketId).emit("private-message", { lng, lat })
 
