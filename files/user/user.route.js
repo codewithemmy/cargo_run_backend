@@ -21,7 +21,7 @@ userRoute
   .route("/login")
   .post(validate(checkSchema(loginValidation)), userLoginController)
 
-// userRoute.use(isAuthenticated)
+userRoute.use(isAuthenticated)
 
 userRoute.route("/").patch(userUpdateController)
 
