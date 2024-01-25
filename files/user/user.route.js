@@ -9,6 +9,7 @@ const {
   createUserController,
   userLoginController,
   userUpdateController,
+  getRiderRouteController,
 } = require("./user.controller")
 
 const { loginValidation } = require("../../validations/users/loginValidation")
@@ -20,8 +21,11 @@ userRoute
   .route("/login")
   .post(validate(checkSchema(loginValidation)), userLoginController)
 
-userRoute.use(isAuthenticated)
+// userRoute.use(isAuthenticated)
 
 userRoute.route("/").patch(userUpdateController)
+
+//rider route
+userRoute.route("/rider-route").get(getRiderRouteController)
 
 module.exports = userRoute

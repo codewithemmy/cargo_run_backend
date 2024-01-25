@@ -4,13 +4,14 @@ const {
   tokenHandler,
   verifyPassword,
   queryConstructor,
-  sanitizePhoneNumber,
-  generateOtp,
-  AlphaNumeric,
 } = require("../../utils")
-const createHash = require("../../utils/createHash")
+
 const { UserSuccess, UserFailure } = require("./user.messages")
 const { UserRepository } = require("./user.repository")
+const {
+  SocketRepository,
+} = require("../../files/messages/sockets/sockets.repository")
+const { OrderRepository } = require("../order/order.repository")
 
 const { LIMIT, SKIP, SORT } = require("../../constants")
 const { sendMailNotification } = require("../../utils/email")
@@ -107,6 +108,28 @@ class UserService {
       success: true,
       msg: UserSuccess.UPDATE,
     }
+  }
+
+  static async getRiderRoute({ body, io, locals }) {
+    const { lat, lng, orderId } = body
+
+    const [order] = await Promise.all([
+      await OrderRepository.findSingleOrderByParams({
+        _id: new mongoose.Types.ObjectId(orderId),
+        paymentStatus: "paid",
+      }),
+    ])
+
+    if (!order) return { success: true, msg: `Order not found`, data: [] }
+
+    const socketDetails = await SocketRepository.findSingleSocket({
+      userId: new mongoose.Types.ObjectId(locals),
+    })
+    console.log({ lng, lat })
+    if (socketDetails)
+      io.to(socketDetails.socketId).emit("private-message", { lng, lat })
+
+    return { success: true, msg: UserSuccess.LOCATION }
   }
 }
 module.exports = { UserService }

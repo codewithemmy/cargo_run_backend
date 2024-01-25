@@ -118,8 +118,8 @@ class OrderService {
       }),
     ])
 
-    if (!order) return { success: true, msg: `order not found`, data: [] }
-    if (location) return { success: true, msg: `destination reached` }
+    if (!order) return { success: true, msg: `Order not found`, data: [] }
+    if (location) return { success: true, msg: `Destination reached` }
 
     const socketDetails = await SocketRepository.findSingleSocket({
       userId: new mongoose.Types.ObjectId(riderId),
@@ -128,7 +128,7 @@ class OrderService {
     if (socketDetails)
       io.to(socketDetails.socketId).emit("private-message", order)
 
-    return { success: true, msg: `order location fetched` }
+    return { success: true, msg: `Order location fetched` }
   }
 }
 
