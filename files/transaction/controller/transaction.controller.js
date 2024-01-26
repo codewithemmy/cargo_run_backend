@@ -1,4 +1,4 @@
-const { config } = require("dotenv")
+const { config } = require("../../../core/config")
 const { BAD_REQUEST, SUCCESS } = require("../../../constants/statusCode")
 const { responseHandler } = require("../../../core/response")
 const { manageAsyncOps } = require("../../../utils")
