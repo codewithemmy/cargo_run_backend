@@ -79,9 +79,9 @@ class AuthService {
   }
 
   static async resendOtpService(payload) {
-    const { email, id } = payload
+    const { email } = payload
     const user = await UserRepository.findSingleUserWithParams({
-      _id: new mongoose.Types.ObjectId(id),
+      email,
     })
 
     if (!user) return { success: false, msg: AuthFailure.FETCH }
