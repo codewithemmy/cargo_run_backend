@@ -40,13 +40,13 @@ class UserService {
     user.password = undefined
 
     token = await tokenHandler({
-      _id: user._id,
+      ...user,
     })
 
     return {
       success: true,
       msg: UserSuccess.CREATE,
-      token,
+      data: { ...user, ...token },
     }
   }
 
