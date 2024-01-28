@@ -40,13 +40,22 @@ class UserService {
     user.password = undefined
 
     token = await tokenHandler({
-      ...user,
+      _id: user._id,
+      email: user.email,
+      fullName: user.fullName,
     })
+
+    const userProfile = {
+      _id: user._id,
+      email: user.email,
+      fullName: user.fullName,
+      ...token,
+    }
 
     return {
       success: true,
       msg: UserSuccess.CREATE,
-      data: { ...user, ...token },
+      data: userProfile,
     }
   }
 
