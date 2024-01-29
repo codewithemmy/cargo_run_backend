@@ -217,7 +217,7 @@ const verifyWhoAmI = (user, query) => {
 
 //otp
 const generateOtp = () => {
-  const otp = Math.floor(1000 + Math.random() * 900000)
+  const otp = Math.floor(1000 + Math.random() * 90000)
   let expiry = new Date()
   expiry.setTime(new Date().getTime() + 30 * 60 * 1000)
 
