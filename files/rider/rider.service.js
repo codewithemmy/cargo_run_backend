@@ -182,7 +182,7 @@ class RiderService {
 
     if (!rider) return { success: false, msg: AuthFailure.FETCH }
 
-    const otp = AlphaNumeric(6)
+    const otp = AlphaNumeric(6, "number")
 
     rider.verificationOtp = otp
     rider.email = email
