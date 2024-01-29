@@ -86,7 +86,7 @@ class AuthService {
 
     if (!user) return { success: false, msg: AuthFailure.FETCH }
 
-    const otp = AlphaNumeric(6, "number")
+    const { otp } = generateOtp()
 
     user.verificationOtp = otp
     user.email = email

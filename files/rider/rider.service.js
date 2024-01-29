@@ -4,8 +4,6 @@ const {
   tokenHandler,
   verifyPassword,
   queryConstructor,
-
-  AlphaNumeric,
   generateOtp,
 } = require("../../utils")
 const { RiderSuccess, RiderFailure } = require("./rider.messages")
@@ -182,7 +180,7 @@ class RiderService {
 
     if (!rider) return { success: false, msg: AuthFailure.FETCH }
 
-    const otp = AlphaNumeric(6, "number")
+    const { otp } = generateOtp()
 
     rider.verificationOtp = otp
     rider.email = email
