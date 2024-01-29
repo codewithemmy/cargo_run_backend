@@ -140,5 +140,15 @@ class UserService {
 
     return { success: true, msg: UserSuccess.LOCATION }
   }
+
+  static async getUserService(locals) {
+    const userExist = await UserRepository.findSingleUserWithParams({
+      _id: new mongoose.Types.ObjectId(locals),
+    })
+
+    if (!userExist) return { success: false, msg: UserFailure.FETCH }
+
+    return { success: true, msg: UserSuccess.FETCH, data: userExist }
+  }
 }
 module.exports = { UserService }

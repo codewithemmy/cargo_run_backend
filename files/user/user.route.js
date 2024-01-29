@@ -10,6 +10,7 @@ const {
   userLoginController,
   userUpdateController,
   getRiderRouteController,
+  getUserProfileController,
 } = require("./user.controller")
 
 const { loginValidation } = require("../../validations/users/loginValidation")
@@ -24,6 +25,7 @@ userRoute
 userRoute.use(isAuthenticated)
 
 userRoute.route("/").patch(userUpdateController)
+userRoute.route("/").get(getUserProfileController)
 
 //rider route
 userRoute.route("/rider-route").get(getRiderRouteController)

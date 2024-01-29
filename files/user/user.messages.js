@@ -21,6 +21,5 @@ module.exports.UserFailure = {
   SEARCH_ERROR: "Invalid data input",
   PASSWORD: "Invalid password input",
   VERIFIED: "not a verified user, verify your account",
-  EMAIL_EXIST: "Email currently exists",
   SWITCH: "account switch is unsuccessful",
 }
