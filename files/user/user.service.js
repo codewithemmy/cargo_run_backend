@@ -142,13 +142,24 @@ class UserService {
   }
 
   static async getUserService(locals) {
-    const userExist = await UserRepository.findSingleUserWithParams({
-      _id: new mongoose.Types.ObjectId(locals),
-    })
+    const user = await UserRepository.findSingleUserWithParams(
+      {
+        _id: new mongoose.Types.ObjectId(locals),
+      },
+      { password: 0 }
+    )
 
-    if (!userExist) return { success: false, msg: UserFailure.FETCH }
+    if (!user) return { success: false, msg: UserFailure.FETCH }
 
-    return { success: true, msg: UserSuccess.FETCH, data: userExist }
+    return { success: true, msg: UserSuccess.FETCH, data: user }
+  }
+
+  static async getAllUsersService(params) {
+    const user = await UserRepository.findAllUsersParams({ ...params })
+
+    if (!user) return { success: false, msg: UserFailure.FETCH }
+
+    return { success: true, msg: UserSuccess.FETCH, data: user }
   }
 }
 module.exports = { UserService }

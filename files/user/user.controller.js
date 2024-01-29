@@ -68,10 +68,21 @@ const getUserProfileController = async (req, res, next) => {
   return responseHandler(res, SUCCESS, data)
 }
 
+const getAllUsersControllers = async (req, res, next) => {
+  const [error, data] = await manageAsyncOps(UserService.getAllUsersService())
+
+  if (error) return next(error)
+
+  if (!data.success) return next(new CustomError(data.msg, BAD_REQUEST, data))
+
+  return responseHandler(res, SUCCESS, data)
+}
+
 module.exports = {
   createUserController,
   userLoginController,
   userUpdateController,
   getRiderRouteController,
   getUserProfileController,
+  getAllUsersControllers,
 }

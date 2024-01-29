@@ -11,6 +11,7 @@ const {
   userUpdateController,
   getRiderRouteController,
   getUserProfileController,
+  getAllUsersControllers,
 } = require("./user.controller")
 
 const { loginValidation } = require("../../validations/users/loginValidation")
@@ -22,6 +23,7 @@ userRoute
   .route("/login")
   .post(validate(checkSchema(loginValidation)), userLoginController)
 
+userRoute.route("/all").get(getAllUsersControllers)
 userRoute.use(isAuthenticated)
 
 userRoute.route("/").patch(userUpdateController)
