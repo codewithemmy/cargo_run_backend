@@ -38,6 +38,7 @@ const paystackWebHook = async (req, res, next) => {
   if (hash == req.headers["x-paystack-signature"]) {
     // Retrieve the request's body
     const event = req.body
+    console.log("event", event)
     const [error, data] = await manageAsyncOps(
       TransactionService.verifyCardPayment(event)
     )
