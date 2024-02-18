@@ -24,6 +24,7 @@ const TransactionSchema = new mongoose.Schema(
       required: true,
       enum: ["paystack", "bank"],
     },
+    bankName: { type: String },
     reference: {
       type: String,
       required: true,

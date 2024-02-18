@@ -88,6 +88,11 @@ class TransactionService {
     await this.getConfig()
     return this.paymentProvider.verifyCardPayment(payload)
   }
+
+  static async verifyPaymentManually(payload) {
+    await this.getConfig()
+    return this.paymentProvider.verifyProviderPayment(payload.reference)
+  }
 }
 
 module.exports = { TransactionService }

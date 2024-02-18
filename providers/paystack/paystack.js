@@ -37,46 +37,22 @@ class PaystackPaymentService {
     let responseStatus = "pending"
     if (statusVerification.success) {
       responseStatus = "confirmed"
-
-      const updatedExisting =
-        await TransactionRepository.updateTransactionDetails(
-          { reference: payload.reference },
-          { status: responseStatus, metaData: JSON.stringify(payload) }
-        )
-
-      if (!updatedExisting)
-        return {
-          success: false,
-          msg: TransactionMessages.PAYMENT_FAILURE,
-        }
-      await OrderRepository.updateOrderDetails(
-        {
-          _id: new mongoose.Types.ObjectId(updatedExisting.orderId),
-          paymentStatus: "pending",
-        },
-        { paymentStatus: "paid" }
-      )
-      return {
-        success: statusVerification.success,
-        msg: statusVerification.msg,
-      }
     } else {
       responseStatus = "failed"
+    }
+
+    const updatedExisting =
       await TransactionRepository.updateTransactionDetails(
         { reference: payload.reference },
         { status: responseStatus, metaData: JSON.stringify(payload) }
       )
 
-      if (!updatedExisting)
-        return {
-          success: false,
-          msg: TransactionMessages.PAYMENT_FAILURE,
-        }
+    if (!updatedExisting)
+      return { success: false, msg: TransactionMessages.PAYMENT_FAILURE }
 
-      return {
-        success: statusVerification.success,
-        msg: statusVerification.msg,
-      }
+    return {
+      success: statusVerification.success,
+      msg: statusVerification.msg,
     }
   }
 
@@ -127,10 +103,24 @@ class PaystackPaymentService {
       data
     )
 
-    if (!verifyAndUpdateTransactionRecord.success)
+    if (!verifyAndUpdateTransactionRecord.success) {
       return { success: false, msg: verifyAndUpdateTransactionRecord.msg }
+    }
 
     return { success: true, msg: TransactionMessages.PAYMENT_SUCCESS }
+  }
+
+  async verifyProviderPayment(reference) {
+    const { data: response } = await this.paymentRequestHandler({
+      method: "GET",
+      url: `/transaction/verify/${reference}`,
+    })
+
+    if (response.status && response.message == "Verification successful") {
+      return this.verifyCardPayment(response)
+    }
+
+    return { success: false, msg: response.message }
   }
 }
 
