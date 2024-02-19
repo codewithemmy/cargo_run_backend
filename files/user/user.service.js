@@ -1,10 +1,5 @@
 const mongoose = require("mongoose")
-const {
-  hashPassword,
-  tokenHandler,
-  verifyPassword,
-  queryConstructor,
-} = require("../../utils")
+const { hashPassword, tokenHandler, verifyPassword } = require("../../utils")
 
 const { UserSuccess, UserFailure } = require("./user.messages")
 const { UserRepository } = require("./user.repository")
@@ -12,6 +7,9 @@ const {
   SocketRepository,
 } = require("../../files/messages/sockets/sockets.repository")
 const { OrderRepository } = require("../order/order.repository")
+const {
+  NotificationRepository,
+} = require("../notification/notification.repository")
 
 const { LIMIT, SKIP, SORT } = require("../../constants")
 const { sendMailNotification } = require("../../utils/email")
@@ -51,6 +49,14 @@ class UserService {
       fullName: user.fullName,
       ...token,
     }
+
+    await NotificationRepository.createNotification({
+      userType: "User",
+      userId: new mongoose.Types.ObjectId(user._id),
+      title: "Account Creation",
+      message:
+        "Congratulations!, your account with cargo_run is created successfully ",
+    })
 
     return {
       success: true,

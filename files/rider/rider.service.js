@@ -11,6 +11,9 @@ const { RiderRepository } = require("./rider.repository")
 
 const { sendMailNotification } = require("../../utils/email")
 const { AuthFailure, AuthSuccess } = require("../auth/auth.messages")
+const {
+  NotificationRepository,
+} = require("../notification/notification.repository")
 
 class RiderService {
   static async createRiderService(body) {
@@ -31,6 +34,14 @@ class RiderService {
 
     let token = await tokenHandler({
       _id: rider._id,
+    })
+
+    await NotificationRepository.createNotification({
+      userType: "Rider",
+      userId: new mongoose.Types.ObjectId(user._id),
+      title: "Account Creation",
+      message:
+        "Congratulations!, your account with cargo_run is created successfully ",
     })
 
     return {

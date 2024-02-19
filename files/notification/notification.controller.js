@@ -15,4 +15,4 @@ const fetchNotifications = async (req, res, next) => {
   return responseHandler(res, 200, data)
 }
 
-module.exports = { fetchNotifications, postNotifications }
+module.exports = { fetchNotifications }
