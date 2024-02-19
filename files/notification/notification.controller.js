@@ -15,16 +15,4 @@ const fetchNotifications = async (req, res, next) => {
   return responseHandler(res, 200, data)
 }
 
-const postNotifications = async (req, res, next) => {
-  const [error, data] = await manageAsyncOps(
-    NotificationService.validateNotificationRecipient(req.body)
-  )
-
-  if (error) return next(error)
-
-  if (!data.SUCCESS) return next(new CustomError(data.msg, 400, data))
-
-  return responseHandler(res, 200, data)
-}
-
 module.exports = { fetchNotifications, postNotifications }
