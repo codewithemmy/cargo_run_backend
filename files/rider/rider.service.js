@@ -38,7 +38,7 @@ class RiderService {
 
     await NotificationRepository.createNotification({
       userType: "Rider",
-      userId: new mongoose.Types.ObjectId(user._id),
+      userId: new mongoose.Types.ObjectId(rider._id),
       title: "Account Creation",
       message:
         "Congratulations!, your account with cargo_run is created successfully ",
