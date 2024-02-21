@@ -26,7 +26,9 @@ module.exports.socketConnection = async (io) => {
           socket.emit("join", `Error: ${data.message}`)
         } else {
           socket.emit("join", "Connection Successful")
-          const orders = await OrderRepository.findOrderBySocket()
+          const orders = await OrderRepository.findOrderBySocket({
+            status: "paid",
+          })
           // Emit the order details to the client
           socket.emit("get-orders", orders)
         }
