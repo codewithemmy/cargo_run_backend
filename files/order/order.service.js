@@ -15,20 +15,22 @@ class OrderService {
     // })
 
     // if (orderExist) return { success: false, msg: orderMessage.ORDER_EXIST }
+    console.log("this is the payload")
+    const { otp } = generateOtp()
+    const trackingId = AlphaNumeric(9)
 
-    // const { otp } = generateOtp()
-    // const trackingId = AlphaNumeric(9)
+    const order = await OrderRepository.createOrder({
+      userId: new mongoose.Types.ObjectId(params),
+      orderId: otp,
+      trackingId,
+      ...payload,
+    })
 
-    // const order = await OrderRepository.createOrder({
-    //   userId: new mongoose.Types.ObjectId(params),
-    //   orderId: otp,
-    //   trackingId,
-    //   ...payload,
-    // })
+    console.log("this is the payload", order)
 
-    // if (!order) return { success: false, msg: orderMessage.ORDER_ERROR }
+    if (!order) return { success: false, msg: orderMessage.ORDER_ERROR }
 
-    return { success: true, msg: orderMessage.ORDER_CREATED }
+    return { success: true, msg: orderMessage.ORDER_CREATED, data: order }
   }
 
   static async fetchOrder(query) {
