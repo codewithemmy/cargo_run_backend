@@ -10,11 +10,11 @@ const { SocketRepository } = require("../messages/sockets/sockets.repository")
 
 class OrderService {
   static async createOrderService(payload, params) {
-    const orderExist = await OrderRepository.findSingleOrderExist({
-      userId: new mongoose.Types.ObjectId(params),
-    })
+    // const orderExist = await OrderRepository.findSingleOrderExist({
+    //   userId: new mongoose.Types.ObjectId(params),
+    // })
 
-    if (orderExist) return { success: false, msg: orderMessage.ORDER_EXIST }
+    // if (orderExist) return { success: false, msg: orderMessage.ORDER_EXIST }
 
     const { otp } = generateOtp()
     const trackingId = AlphaNumeric(9)
