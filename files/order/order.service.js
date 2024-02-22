@@ -30,7 +30,7 @@ class OrderService {
 
     if (!order) return { success: false, msg: orderMessage.ORDER_ERROR }
 
-    return { success: true, msg: orderMessage.ORDER_CREATED, data: order }
+    return { success: false, msg: orderMessage.ORDER_CREATED, data: order }
   }
 
   static async fetchOrder(query) {
