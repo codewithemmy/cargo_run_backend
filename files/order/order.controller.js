@@ -7,7 +7,8 @@ const createOrderController = async (req, res, next) => {
   const [error, data] = await manageAsyncOps(
     OrderService.createOrderService(req.body, res.locals.jwt._id)
   )
-
+  console.log("bug error", error)
+  console.log("this is working fine")
   if (error) return next(error)
 
   if (!data.success) return next(new CustomError(data.msg, 400, data))
