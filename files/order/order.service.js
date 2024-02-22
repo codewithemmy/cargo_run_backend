@@ -26,11 +26,10 @@ class OrderService {
       ...payload,
     })
 
-    console.log("this is the payload", order)
 
     if (!order) return { success: false, msg: orderMessage.ORDER_ERROR }
 
-    return { success: false, msg: orderMessage.ORDER_CREATED, data: order }
+    return { success: true, msg: orderMessage.ORDER_CREATED, data: order }
   }
 
   static async fetchOrder(query) {
