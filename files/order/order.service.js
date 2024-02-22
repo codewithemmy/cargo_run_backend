@@ -26,7 +26,6 @@ class OrderService {
       ...payload,
     })
 
-
     if (!order) return { success: false, msg: orderMessage.ORDER_ERROR }
 
     return { success: true, msg: orderMessage.ORDER_CREATED, data: order }
@@ -130,6 +129,12 @@ class OrderService {
       io.to(socketDetails.socketId).emit("private-message", order)
 
     return { success: true, msg: `Order location fetched` }
+  }
+
+  static async addOrderService(payload) {
+    if (!payload) return { success: false, msg: `payload cannot be empty` }
+
+    return { success: true, msg: `order successfully  added` }
   }
 }
 

@@ -62,10 +62,23 @@ const updateOrderController = async (req, res, next) => {
   return responseHandler(res, 200, data)
 }
 
+const addOrderController = async (req, res, next) => {
+  const [error, data] = await manageAsyncOps(
+    OrderService.addOrderService(req.body)
+  )
+
+  if (error) return next(error)
+
+  if (!data.success) return next(new CustomError(data.msg, 400, data))
+
+  return responseHandler(res, 200, data)
+}
+
 module.exports = {
   createOrderController,
   fetchOrderController,
   orderRatingController,
   getOrderRouteController,
   updateOrderController,
+  addOrderController,
 }
