@@ -184,10 +184,10 @@ class RiderService {
     }
   }
 
-  static async resendOtpService(payload) {
-    const { email, id } = payload
+  static async resendOtpService(payload, jwtId) {
+    const { email } = payload
     const rider = await RiderRepository.findSingleRiderWithParams({
-      _id: new mongoose.Types.ObjectId(id),
+      _id: new mongoose.Types.ObjectId(jwtId),
     })
 
     if (!rider) return { success: false, msg: AuthFailure.FETCH }

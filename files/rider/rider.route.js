@@ -15,7 +15,6 @@ const {
 
 riderRoute.route("/login").post(riderLoginController)
 riderRoute.route("/verify").post(verifyRiderController)
-riderRoute.route("/resend-otp").post(resentOtpController)
 riderRoute.route("/forgot-password").post(forgotPasswordController)
 riderRoute.route("/reset-password").post(resetPasswordController)
 
@@ -23,6 +22,7 @@ riderRoute.route("/reset-password").post(resetPasswordController)
 riderRoute.route("/").post(createRiderController)
 
 riderRoute.use(isAuthenticated)
+riderRoute.route("/resend-otp").post(resentOtpController)
 
 riderRoute.route("/").patch(updateRiderController)
 

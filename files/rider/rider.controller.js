@@ -65,7 +65,7 @@ const verifyRiderController = async (req, res, next) => {
 
 const resentOtpController = async (req, res, next) => {
   const [error, data] = await manageAsyncOps(
-    RiderService.resendOtpService(req.body)
+    RiderService.resendOtpService(req.body, res.locals.jwt._id)
   )
 
   if (error) return next(error)
