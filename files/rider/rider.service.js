@@ -23,7 +23,8 @@ class RiderService {
       phone,
     })
 
-    if (riderExist) return { success: false, msg: RiderFailure.EXIST }
+    if (riderExist)
+      return { success: false, msg: `rider with phone details already exist` }
 
     const rider = await RiderRepository.create({
       ...body,
