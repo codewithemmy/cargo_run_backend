@@ -6,6 +6,11 @@ const { OrderRepository } = require("../../order/order.repository")
 module.exports.socketConnection = async (io) => {
   io.on("connection", async (socket) => {
     console.log(`⚡⚡: ${socket.id} user just connected!`)
+    socket.emit("join", "Connection Successful")
+    const orders = await OrderRepository.findOrderBySocket({
+      status: "paid",
+    })
+    console.log("get-orders", orders)
 
     socket.on("join", async (obj) => {
       try {
