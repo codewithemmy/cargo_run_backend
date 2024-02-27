@@ -10,8 +10,7 @@ module.exports.socketConnection = async (io) => {
     const orders = await OrderRepository.findOrderBySocket({
       status: "paid",
     })
-     socket.emit("get-orders", orders)
-    console.log("get-orders", orders)
+    socket.emit("get-orders", orders)
 
     socket.on("join", async (obj) => {
       try {
@@ -32,12 +31,6 @@ module.exports.socketConnection = async (io) => {
           socket.emit("join", `Error: ${data.message}`)
         } else {
           socket.emit("join", "Connection Successful")
-          const orders = await OrderRepository.findOrderBySocket({
-            status: "paid",
-          })
-          console.log("get-orders", orders)
-          // Emit the order details to the client
-          socket.emit("get-orders", orders)
         }
       } catch (error) {
         console.log("socket error", error)
