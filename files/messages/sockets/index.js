@@ -10,6 +10,7 @@ module.exports.socketConnection = async (io) => {
     const orders = await OrderRepository.findOrderBySocket({
       status: "paid",
     })
+     socket.emit("get-orders", orders)
     console.log("get-orders", orders)
 
     socket.on("join", async (obj) => {
