@@ -29,6 +29,7 @@ module.exports.socketConnection = async (io) => {
           const orders = await OrderRepository.findOrderBySocket({
             status: "paid",
           })
+          console.log("get-orders", orders)
           // Emit the order details to the client
           socket.emit("get-orders", orders)
         }
@@ -39,10 +40,7 @@ module.exports.socketConnection = async (io) => {
 
     socket.on("disconnect", async () => {
       await SocketRepository.deleteUser(socket.id)
-      onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id)
-      console.log("user disconnected", onlineUsers)
-      // send all online users to all users
-      io.emit("get-users", onlineUsers)
+      console.log("user disconnected")
     })
 
     socket.on("error", (error) => {
