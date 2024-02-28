@@ -109,7 +109,7 @@ class PaystackPaymentService {
 
     await OrderRepository.updateOrderDetails(
       {
-        _id: new mongoose.Types.ObjectId(),
+        _id: new mongoose.Types.ObjectId(transaction.userId),
       },
       {
         paymentStatus: "paid",

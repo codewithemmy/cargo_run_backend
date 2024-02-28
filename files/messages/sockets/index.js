@@ -11,6 +11,7 @@ module.exports.socketConnection = async (io) => {
       paymentStatus: "paid",
     })
     socket.emit("get-orders", orders)
+    console.log("get-orders", orders)
 
     socket.on("join", async (obj) => {
       try {
