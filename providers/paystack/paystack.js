@@ -107,6 +107,15 @@ class PaystackPaymentService {
       return { success: false, msg: verifyAndUpdateTransactionRecord.msg }
     }
 
+    await OrderRepository.updateOrderDetails(
+      {
+        _id: new mongoose.Types.ObjectId(),
+      },
+      {
+        paymentStatus: "paid",
+      }
+    )
+
     return { success: true, msg: TransactionMessages.PAYMENT_SUCCESS }
   }
 

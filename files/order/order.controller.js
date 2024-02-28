@@ -52,7 +52,7 @@ const fetchOrderController = async (req, res, next) => {
 
 const updateOrderController = async (req, res, next) => {
   const [error, data] = await manageAsyncOps(
-    OrderService.updateOrderService(req.body, req.params.id)
+    OrderService.updateOrderService(req.body, req.params.id, res.locals.jwt._id)
   )
 
   if (error) return next(error)

@@ -61,20 +61,28 @@ class OrderService {
     }
   }
 
-  static async updateOrderService(payload, params) {
+  static async updateOrderService(payload, params, jwtId) {
     const findOrder = await OrderRepository.findSingleOrderByParams({
       _id: new mongoose.Types.ObjectId(params),
     })
 
     if (!findOrder) return { success: false, msg: orderMessage.ORDER_NOT_FOUND }
 
+    if (payload.status === "accepted") {
+      payload.riderId = new mongoose.Types.ObjectId(jwtId)
+    }
+
     const order = await OrderRepository.updateOrderDetails(
       { _id: new mongoose.Types.ObjectId(params), paymentStatus: "paid" },
       { ...payload }
     )
 
-    if (!order) return { success: false, msg: orderMessage.UPDATE_ERROR }
-    console.log("right here")
+    if (!order)
+      return {
+        success: false,
+        msg: `Payment Status for this order is currently not paid or does not exist`,
+      }
+
     return {
       success: true,
       msg: orderMessage.UPDATE,

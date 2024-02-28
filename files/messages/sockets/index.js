@@ -8,7 +8,7 @@ module.exports.socketConnection = async (io) => {
     console.log(`⚡⚡: ${socket.id} user just connected!`)
     socket.emit("join", "Connection Successful")
     const orders = await OrderRepository.findOrderBySocket({
-      status: "paid",
+      paymentStatus: "paid",
     })
     socket.emit("get-orders", orders)
 
