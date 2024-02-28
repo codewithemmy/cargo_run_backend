@@ -4,7 +4,6 @@ const { CustomError } = require("../../utils/errors")
 const { OrderService } = require("./order.service")
 
 const createOrderController = async (req, res, next) => {
-  console.log("req.body", req.body)
   const [error, data] = await manageAsyncOps(
     OrderService.createOrderService(req.body, res.locals.jwt._id)
   )

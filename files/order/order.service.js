@@ -15,7 +15,7 @@ class OrderService {
     // })
 
     // if (orderExist) return { success: false, msg: orderMessage.ORDER_EXIST }
-    console.log("this is the payload")
+
     const { otp } = generateOtp()
     const trackingId = AlphaNumeric(9)
 
