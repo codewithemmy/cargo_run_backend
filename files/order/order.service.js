@@ -134,7 +134,10 @@ class OrderService {
     })
 
     if (socketDetails)
-      io.to(socketDetails.socketId).emit("private-message", order)
+      io.to(socketDetails.socketId).emit("private-message", {
+        order,
+        ridersLocation: { lat, lng },
+      })
 
     return { success: true, msg: `Order location fetched` }
   }

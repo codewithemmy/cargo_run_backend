@@ -61,7 +61,10 @@ module.exports.socketConnection = async (io) => {
             })
 
             if (socketDetails)
-              io.to(socketDetails.socketId).emit("private-message", order)
+              io.to(socketDetails.socketId).emit("private-message", {
+                order,
+                ridersLocation: { lng: obj.lng, lat: obj.lat },
+              })
           })
         }
       } catch (error) {
