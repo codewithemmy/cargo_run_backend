@@ -31,6 +31,38 @@ module.exports.socketConnection = async (io) => {
           socket.emit("join", `Error: ${data.message}`)
         } else {
           socket.emit("join", "Connection Successful")
+          socket.on("order-route", async (obj) => {
+            const [order, location] = await Promise.all([
+              await OrderRepository.findSingleOrderByParams({
+                _id: new mongoose.Types.ObjectId(obj.orderId),
+                riderId: obj.riderId,
+                paymentStatus: "paid",
+              }),
+              await OrderRepository.findSingleOrderByParams({
+                "receiverDetails.lat": obj.lat,
+                "receiverDetails.lng": obj.lng,
+                riderId: obj.riderId,
+                paymentStatus: "paid",
+              }),
+            ])
+
+            if (!order) {
+              socket.emit("join", {
+                success: true,
+                msg: `Order not found`,
+                data: [],
+              })
+            }
+            if (!location) {
+              socket.emit("join", { success: true, msg: `Destination reached` })
+            }
+            const socketDetails = await SocketRepository.findSingleSocket({
+              userId: new mongoose.Types.ObjectId(order.userId),
+            })
+
+            if (socketDetails)
+              io.to(socketDetails.socketId).emit("private-message", order)
+          })
         }
       } catch (error) {
         console.log("socket error", error)
