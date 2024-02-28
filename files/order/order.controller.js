@@ -28,18 +28,6 @@ const orderRatingController = async (req, res, next) => {
   return responseHandler(res, 200, data)
 }
 
-const getOrderRouteController = async (req, res, next) => {
-  const [error, data] = await manageAsyncOps(
-    OrderService.getOrderRoute({ body: req.body, io: res.io })
-  )
-
-  if (error) return next(error)
-
-  if (!data.success) return next(new CustomError(data.msg, 400, data))
-
-  return responseHandler(res, 200, data)
-}
-
 const fetchOrderController = async (req, res, next) => {
   const [error, data] = await manageAsyncOps(OrderService.fetchOrder(req.query))
 
@@ -62,9 +50,9 @@ const updateOrderController = async (req, res, next) => {
   return responseHandler(res, 200, data)
 }
 
-const addOrderController = async (req, res, next) => {
+const orderAnalysisController = async (req, res, next) => {
   const [error, data] = await manageAsyncOps(
-    OrderService.addOrderService(req.body)
+    OrderService.orderAnalysisService(res.locals.jwt._id)
   )
 
   if (error) return next(error)
@@ -78,7 +66,6 @@ module.exports = {
   createOrderController,
   fetchOrderController,
   orderRatingController,
-  getOrderRouteController,
   updateOrderController,
-  addOrderController,
+  orderAnalysisController,
 }

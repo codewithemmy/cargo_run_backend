@@ -109,43 +109,27 @@ class OrderService {
     }
   }
 
-  static async getOrderRoute({ body, io }) {
-    const { riderId, orderId, lat, lng } = body
-
-    const [order, location] = await Promise.all([
-      await OrderRepository.findSingleOrderByParams({
-        _id: new mongoose.Types.ObjectId(orderId),
-        riderId,
-        paymentStatus: "paid",
-      }),
-      await OrderRepository.findSingleOrderByParams({
-        "receiverDetails.lat": lat,
-        "receiverDetails.lng": lng,
-        riderId,
-        paymentStatus: "paid",
-      }),
-    ])
-
-    if (!order) return { success: true, msg: `Order not found`, data: [] }
-    if (location) return { success: true, msg: `Destination reached` }
-
-    const socketDetails = await SocketRepository.findSingleSocket({
-      userId: new mongoose.Types.ObjectId(riderId),
+  static async orderAnalysisService(params) {
+    const order = await OrderRepository.fetchOrderByParams({
+      riderId: new mongoose.Types.ObjectId(params),
     })
 
-    if (socketDetails)
-      io.to(socketDetails.socketId).emit("private-message", {
-        order,
-        ridersLocation: { lat, lng },
-      })
+    if (!order)
+      return {
+        success: true,
+        msg: `Rider does not have order currently`,
+        data: [],
+      }
 
-    return { success: true, msg: `Order location fetched` }
-  }
+    const totalEarning = order.reduce((total, item) => {
+      return total + (item.amount || 0)
+    }, 0)
 
-  static async addOrderService(payload) {
-    if (!payload) return { success: false, msg: `payload cannot be empty` }
-
-    return { success: true, msg: `order successfully  added` }
+    return {
+      success: true,
+      msg: orderMessage.ORDER_FETCHED,
+      data: { totalEarning, totalOrder: order.length },
+    }
   }
 }
 
