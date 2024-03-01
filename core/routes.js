@@ -7,10 +7,12 @@ const conversationRoute = require("../files/messages/conversations/conversation.
 const riderRoute = require("../files/rider/rider.route")
 const orderRoute = require("../files/order/order.route")
 const transactionRoute = require("../files/transaction/transaction.route")
+const adminRoute = require("../files/admin/admin.route")
 
 const routes = (app) => {
   const base_url = "/api/v1"
 
+  app.use(`${base_url}/admin`, adminRoute)
   app.use(`${base_url}/user`, userRoute)
   app.use(`${base_url}/rider`, riderRoute)
   app.use(`${base_url}/auth`, authRoute)
