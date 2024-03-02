@@ -10,7 +10,7 @@ module.exports.adminMessages = {
 
   ADMIN_FOUND: "Admin successfully fetched",
   ADMIN_CREATED:
-    "Admin successfully created, check your email for verification code",
+    "Admin successfully created",
   ADMIN_EXISTS: "Admin already exists",
 
   PASSWORD_RESET_SUCCESS: "Password successfully reset",

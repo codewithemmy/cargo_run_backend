@@ -20,16 +20,20 @@ class AdminAuthService {
 
     signUp.password = undefined
 
-    const substitutional_parameters = {
-      name: signUp.name,
+    try {
+      const substitutional_parameters = {
+        name: signUp.name,
+      }
+      await sendMailNotification(
+        signUp.email,
+        "Admin Account",
+        substitutional_parameters,
+        "ADMIN_CREATION",
+        true
+      )
+    } catch (error) {
+      console.log("error", error)
     }
-    await sendMailNotification(
-      signUp.email,
-      "Admin Account",
-      substitutional_parameters,
-      "ADMIN_CREATION",
-      true
-    )
 
     return { success: true, msg: adminMessages.ADMIN_CREATED }
   }

@@ -3,9 +3,13 @@ const { checkSchema } = require("express-validator")
 const { isAuthenticated, adminVerifier } = require("../../utils")
 const { uploadManager } = require("../../utils/multer")
 const { validate } = require("../../validations/validate")
-const { adminSignUpController } = require("./controllers/auth.controller")
+const {
+  adminSignUpController,
+  adminLoginController,
+} = require("./controllers/auth.controller")
 
 //auth routes
-adminRoute.post("/signup", adminSignUpController)
+adminRoute.post("/sign-up", adminSignUpController)
+adminRoute.post("/login", adminLoginController)
 
 module.exports = adminRoute

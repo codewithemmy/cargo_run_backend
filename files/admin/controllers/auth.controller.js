@@ -5,7 +5,6 @@ const { AdminAuthService } = require("../services/auth.service")
 
 const adminSignUpController = async (req, res, next) => {
   const [error, data] = await manageAsyncOps(AdminAuthService.signup(req.body))
-
   if (error) return next(error)
 
   if (!data?.success) return next(new CustomError(data.msg, 400, data))
