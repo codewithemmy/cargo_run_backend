@@ -131,6 +131,43 @@ class OrderService {
       data: { totalEarning, totalOrder: order.length },
     }
   }
+
+  static async orderDashboardService() {
+    const analysis = await OrderRepository.orderYearlyAnalysis({})
+    const order = await OrderRepository.fetchOrderWithoutParams()
+
+    const pendingOrder = order.filter(
+      (item) => item.status === "delivered"
+    ).length
+
+    const cancelledOrder = order.filter(
+      (item) => item.status === "cancelled"
+    ).length
+
+    const deliveredOrder = order.filter(
+      (item) => item.status === "delivered"
+    ).length
+
+    if (!order)
+      return {
+        success: true,
+        msg: `Rider does not have order currently`,
+        data: [],
+      }
+
+    return {
+      success: true,
+      msg: orderMessage.ORDER_FETCHED,
+      data: {
+        analysis,
+        pendingOrder,
+        deliveredOrder,
+        cancelledOrder,
+        totalOrder: order.length,
+      },
+      order,
+    }
+  }
 }
 
 module.exports = { OrderService }

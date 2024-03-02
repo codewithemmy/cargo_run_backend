@@ -37,6 +37,40 @@ class OrderRepository {
       { new: true, runValidators: true }
     )
   }
+
+  static async fetchOrderWithoutParams(payload) {
+    return await Order.find({ ...payload }).sort({ createdAt: -1 })
+  }
+
+  static async orderYearlyAnalysis(payload) {
+    const twelveMonthsAgo = new Date()
+    twelveMonthsAgo.setFullYear(twelveMonthsAgo.getFullYear() - 1)
+
+    const order = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: twelveMonthsAgo },
+          // status: { $in: ["completed", "pending", "ongoing", "cancelled"] }, // Filter by "completed" and "pending" statuses
+        },
+      },
+      {
+        $project: {
+          month: { $month: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: { month: "$month" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { "_id.month": 1 }, // Sort by month
+      },
+    ])
+
+    return order
+  }
 }
 
 module.exports = { OrderRepository }
