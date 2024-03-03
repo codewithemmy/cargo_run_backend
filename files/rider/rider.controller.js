@@ -16,6 +16,18 @@ const createRiderController = async (req, res, next) => {
   return responseHandler(res, SUCCESS, data)
 }
 
+const getRiderController = async (req, res, next) => {
+  const [error, data] = await manageAsyncOps(
+    RiderService.fetchRiderService(req.query)
+  )
+
+  if (error) return next(error)
+
+  if (!data.success) return next(new CustomError(data.msg, BAD_REQUEST, data))
+
+  return responseHandler(res, SUCCESS, data)
+}
+
 const riderLoginController = async (req, res, next) => {
   const [error, data] = await manageAsyncOps(
     RiderService.riderLoginService(req.body)
@@ -99,6 +111,18 @@ const resetPasswordController = async (req, res, next) => {
   return responseHandler(res, SUCCESS, data)
 }
 
+const verifyRiderCredentialController = async (req, res, next) => {
+  const [error, data] = await manageAsyncOps(
+    RiderService.updateRiderService(req.params.id, req.body)
+  )
+
+  if (error) return next(error)
+
+  if (!data.success) return next(new CustomError(data.msg, BAD_REQUEST, data))
+
+  return responseHandler(res, SUCCESS, data)
+}
+
 module.exports = {
   createRiderController,
   riderLoginController,
@@ -108,4 +132,6 @@ module.exports = {
   resentOtpController,
   forgotPasswordController,
   resetPasswordController,
+  getRiderController,
+  verifyRiderCredentialController,
 }

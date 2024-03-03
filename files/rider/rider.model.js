@@ -33,6 +33,11 @@ const riderSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    verifiedCredentials: {
+      type: String,
+      enum: ["pending", "verified", "rejected"],
+      default: "pending",
+    },
     passwordToken: {
       type: String,
     },

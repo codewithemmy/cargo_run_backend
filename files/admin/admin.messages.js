@@ -9,8 +9,7 @@ module.exports.adminMessages = {
   LOGIN_DENIED: "You are unauthorized to login on this route",
 
   ADMIN_FOUND: "Admin successfully fetched",
-  ADMIN_CREATED:
-    "Admin successfully created",
+  ADMIN_CREATED: "Admin successfully created",
   ADMIN_EXISTS: "Admin already exists",
 
   PASSWORD_RESET_SUCCESS: "Password successfully reset",
@@ -20,4 +19,6 @@ module.exports.adminMessages = {
   MISSING_INPUT: "One or more missing inputs",
   INVALID_FORMAT: "Invalid format",
   REQUIRED_COMPANYID: "Company Id is required",
+  UPDATE_ERROR: "Error updating admin",
+  UPDATE_SUCCESS: "Admin update successful",
 }

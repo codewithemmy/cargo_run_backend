@@ -1,6 +1,6 @@
 const { uploadManager } = require("../../utils/multer")
 const riderRoute = require("express").Router()
-const { isAuthenticated } = require("../../utils")
+const { isAuthenticated, adminVerifier } = require("../../utils")
 
 const {
   createRiderController,
@@ -11,6 +11,7 @@ const {
   resentOtpController,
   forgotPasswordController,
   resetPasswordController,
+  verifyRiderCredentialController,
 } = require("./rider.controller")
 
 riderRoute.route("/login").post(riderLoginController)
@@ -25,6 +26,9 @@ riderRoute.use(isAuthenticated)
 riderRoute.route("/resend-otp").post(resentOtpController)
 
 riderRoute.route("/").patch(updateRiderController)
+riderRoute
+  .route("/credential/:id")
+  .patch(adminVerifier, verifyRiderCredentialController)
 
 riderRoute
   .route("/vehicle")
