@@ -168,6 +168,38 @@ class OrderService {
       order,
     }
   }
+
+  static async fetchOrderRating(query) {
+    const { error, params, limit, skip, sort } = queryConstructor(
+      query,
+      "createdAt",
+      "Order"
+    )
+
+    if (error) return { success: false, msg: error }
+
+    const orders = await OrderRepository.fetchOrderByParams({
+      ...params,
+      limit,
+      skip,
+      sort,
+    })
+
+    const allRatings = orders.map((order) => order.ratings).flat()
+
+    if (allRatings === 0)
+      return {
+        success: true,
+        msg: `no rating currently`,
+        data: [],
+      }
+
+    return {
+      success: true,
+      msg: `Ratings fetched`,
+      data: allRatings,
+    }
+  }
 }
 
 module.exports = { OrderService }

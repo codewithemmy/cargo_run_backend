@@ -10,12 +10,14 @@ const {
   updateOrderController,
   orderAnalysisController,
   orderDashboardController,
+  fetchOrderRatingController,
 } = require("./order.controller")
 
 orderRoute.route("/").post(createOrderController)
 orderRoute.route("/rating/:id").patch(orderRatingController)
 orderRoute.route("/").get(fetchOrderController)
 orderRoute.route("/:id").patch(updateOrderController)
+orderRoute.route("/ratings").get(fetchOrderRatingController)
 orderRoute.route("/analysis").get(orderAnalysisController)
 orderRoute.route("/dashboard/analysis").get(orderDashboardController)
 
