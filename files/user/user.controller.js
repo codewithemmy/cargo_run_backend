@@ -69,7 +69,9 @@ const getUserProfileController = async (req, res, next) => {
 }
 
 const getAllUsersControllers = async (req, res, next) => {
-  const [error, data] = await manageAsyncOps(UserService.getAllUsersService())
+  const [error, data] = await manageAsyncOps(
+    UserService.getAllUsersService(req.query)
+  )
 
   if (error) return next(error)
 

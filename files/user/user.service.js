@@ -1,5 +1,10 @@
 const mongoose = require("mongoose")
-const { hashPassword, tokenHandler, verifyPassword } = require("../../utils")
+const {
+  hashPassword,
+  tokenHandler,
+  verifyPassword,
+  queryConstructor,
+} = require("../../utils")
 
 const { UserSuccess, UserFailure } = require("./user.messages")
 const { UserRepository } = require("./user.repository")
@@ -160,10 +165,23 @@ class UserService {
     return { success: true, msg: UserSuccess.FETCH, data: user }
   }
 
-  static async getAllUsersService(params) {
-    const user = await UserRepository.findAllUsersParams({ ...params })
+  static async getAllUsersService(query) {
+    const { error, params, limit, skip, sort } = queryConstructor(
+      query,
+      "createdAt",
+      "User"
+    )
 
-    if (!user) return { success: false, msg: UserFailure.FETCH }
+    if (error) return { success: false, msg: error }
+
+    const user = await UserRepository.findAllUsersParams({
+      ...params,
+      limit,
+      skip,
+      sort,
+    })
+
+    if (!user) return { success: true, msg: UserFailure.FETCH, data: [] }
 
     return { success: true, msg: UserSuccess.FETCH, data: user }
   }
