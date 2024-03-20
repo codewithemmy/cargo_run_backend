@@ -1,8 +1,6 @@
 const adminRoute = require("express").Router()
-const { checkSchema } = require("express-validator")
-const { isAuthenticated, adminVerifier } = require("../../utils")
+const { isAuthenticated } = require("../../utils")
 const { uploadManager } = require("../../utils/multer")
-const { validate } = require("../../validations/validate")
 const {
   adminSignUpController,
   adminLoginController,
